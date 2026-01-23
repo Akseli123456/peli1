@@ -1,8 +1,7 @@
 namespace SpriteKind {
-    export const coin = SpriteKind.create()
-    export const kolikko = SpriteKind.create()
     export const o = SpriteKind.create()
     export const Kolikkoo = SpriteKind.create()
+    export const Bee = SpriteKind.create()
 }
 controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
     if (mySprite.vy == 0) {
@@ -13,14 +12,85 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Kolikkoo, function (sprite, othe
     info.changeScoreBy(1)
     sprites.destroy(otherSprite)
 })
-scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile16`, function (sprite, location) {
+scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile8`, function (sprite, location) {
     game.gameOver(true)
+})
+sprites.onOverlap(SpriteKind.Player, SpriteKind.Bee, function (sprite, otherSprite) {
+    sprites.destroy(otherSprite)
+    _2 = sprites.create(img`
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        `, SpriteKind.Enemy)
+    animation.runImageAnimation(
+    _2,
+    [img`
+        . . . . . . . . . . . . . . . . 
+        . . . 1 1 1 . . . . . . . . . . 
+        . . 1 1 1 1 1 1 . . . . . . . . 
+        . . 1 1 1 1 1 1 1 . . . . . . . 
+        . . . 1 1 1 1 1 1 1 5 . . 5 . . 
+        . . . . 5 5 f 5 5 f 5 5 5 . . . 
+        . . . f 5 f 5 5 f 5 5 f 5 f . . 
+        . . f 5 5 f 5 5 f 5 5 5 5 5 . . 
+        . . . f 5 f 5 5 f 5 5 f 5 f . . 
+        . . . . 5 5 f 5 5 f 5 5 f f . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        `,img`
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . 5 . . 5 . . 
+        . . . . 5 5 f 5 5 f 5 5 5 . . . 
+        . . . f 5 f 5 5 f 5 5 f 5 f . . 
+        . . f 5 5 f 5 5 f 5 5 5 5 5 . . 
+        . . . f 5 f 5 5 f 5 5 f 5 f . . 
+        . . . . 5 5 f 5 5 f 5 5 f f . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        `],
+    100,
+    true
+    )
+    _2.setPosition(mySprite.x + 80, mySprite.y - 80)
+    _2.follow(mySprite)
 })
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile28`, function (sprite, location) {
     game.gameOver(false)
+    info.changeLifeBy(-1)
 })
+sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite, otherSprite) {
+    info.changeLifeBy(-1)
+    sprites.destroy(otherSprite)
+})
+let Bee: Sprite = null
 let Kolikkoo: Sprite = null
 let mySprite: Sprite = null
+let _2: Sprite = null
+info.setLife(3)
 scene.setBackgroundImage(img`
     ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
     ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
@@ -187,5 +257,31 @@ for (let value of tiles.getTilesByType(assets.tile`myTile20`)) {
         . . . . . . . . . . . . . . . . 
         `, SpriteKind.Kolikkoo)
     tiles.placeOnTile(Kolikkoo, value)
+    tiles.setTileAt(value, assets.tile`transparency16`)
+}
+for (let value of tiles.getTilesByType(assets.tile`myTile16`)) {
+    Bee = sprites.create(img`
+        ....................
+        ...bbbbbbbbbbbbbbbb.
+        ..bbddddddddddddddbb
+        .bbddddddddddddddddb
+        bbdddddddddddddddddb
+        bddddddddddddddddddb
+        bdddddddddddddddddbb
+        .bbbbbbbbbbbbbbbbbb.
+        bbddddddddddddddddb.
+        dddddddddddddddddddb
+        ddddddddddddddddddbb
+        dddddddddddddddddddb
+        dbbbbbbbbbbbbbbbbbbb
+        bbbbddddddddddddddbb
+        bddddddddddddddddddb
+        ddddddddddddddddddbb
+        bbbdddddddddddddbbb.
+        ..bbbdddddddbbbbb...
+        .....bbb555b55......
+        ......5555555.......
+        `, SpriteKind.Bee)
+    tiles.placeOnTile(Bee, value)
     tiles.setTileAt(value, assets.tile`transparency16`)
 }
