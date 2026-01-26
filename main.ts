@@ -235,7 +235,7 @@ controller.moveSprite(mySprite, 80, 0)
 tiles.setCurrentTilemap(tilemap`level1`)
 mySprite.ay = 300
 scene.cameraFollowSprite(mySprite)
-tiles.placeOnTile(mySprite, tiles.getTileLocation(50, 89))
+tiles.placeOnTile(mySprite, tiles.getTileLocation(50, 20))
 music.play(music.stringPlayable("B A B G A F G C ", 125), music.PlaybackMode.UntilDone)
 for (let value of tiles.getTilesByType(assets.tile`myTile20`)) {
     Kolikkoo = sprites.create(img`
